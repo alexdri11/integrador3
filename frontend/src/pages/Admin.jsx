@@ -8,29 +8,29 @@ function Admin() {
   const [productos, setProductos] = useState([]);
 
   useEffect(() => {
-
     obtenerProductos();
-
   }, []);
 
+  // 🔥 GET PRODUCTOS
   const obtenerProductos = async () => {
+    try {
+      const respuesta = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/productos`
+      );
 
-    const respuesta = await fetch(
-      "http://localhost:3000/api/productos"
-    );
+      const data = await respuesta.json();
+      setProductos(data);
 
-    const data = await respuesta.json();
-
-    setProductos(data);
-
+    } catch (error) {
+      console.log(error);
+    }
   };
 
+  // 🔥 DELETE PRODUCTO
   const eliminarProducto = async (id) => {
-
     try {
-
       await fetch(
-        `http://localhost:3000/api/productos/${id}`,
+        `${import.meta.env.VITE_API_URL}/api/productos/${id}`,
         {
           method: "DELETE"
         }
@@ -39,48 +39,40 @@ function Admin() {
       obtenerProductos();
 
     } catch (error) {
-
       console.log(error);
-
     }
-
   };
 
+  // 🔥 EDITAR PRODUCTO
   const editarProducto = async (producto) => {
 
-  const nuevoNombre = prompt(
-    "Nuevo nombre:",
-    producto.nombre
-  );
-
-  if (!nuevoNombre) return;
-
-  try {
-
-    await fetch(
-      `http://localhost:3000/api/productos/${producto._id}`,
-      {
-        method: "PUT",
-
-        headers: {
-          "Content-Type": "application/json"
-        },
-
-        body: JSON.stringify({
-          nombre: nuevoNombre
-        })
-      }
+    const nuevoNombre = prompt(
+      "Nuevo nombre:",
+      producto.nombre
     );
 
-    obtenerProductos();
+    if (!nuevoNombre) return;
 
-  } catch (error) {
+    try {
+      await fetch(
+        `${import.meta.env.VITE_API_URL}/api/productos/${producto._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            nombre: nuevoNombre
+          })
+        }
+      );
 
-    console.log(error);
+      obtenerProductos();
 
-  }
-
-};
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
 
@@ -117,19 +109,16 @@ function Admin() {
 
                 <p>${producto.precio}</p>
 
-
                 <button
-                    className="btn btn-warning w-100 mb-2"
-                    onClick={() => editarProducto(producto)}
-                >   
-                    Editar
+                  className="btn btn-warning w-100 mb-2"
+                  onClick={() => editarProducto(producto)}
+                >
+                  Editar
                 </button>
 
                 <button
                   className="btn btn-danger w-100"
-                  onClick={() =>
-                    eliminarProducto(producto._id)
-                  }
+                  onClick={() => eliminarProducto(producto._id)}
                 >
                   Eliminar
                 </button>

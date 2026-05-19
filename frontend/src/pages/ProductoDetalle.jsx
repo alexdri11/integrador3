@@ -15,41 +15,37 @@ import {
 
 function ProductoDetalle() {
 
-  const [producto, setProducto] =
-    useState(null);
+  const [producto, setProducto] = useState(null);
 
   const { id } = useParams();
 
-  const { agregarAlCarrito } =
-    useContext(CarritoContext);
+  const { agregarAlCarrito } = useContext(CarritoContext);
 
   useEffect(() => {
 
     fetch(
-      `http://localhost:3000/api/productos/${id}`
+      `${import.meta.env.VITE_API_URL}/api/productos/${id}`
     )
       .then(res => res.json())
-      .then(data => setProducto(data));
+      .then(data => setProducto(data))
+      .catch(error => console.log(error));
 
   }, [id]);
 
   if (!producto) {
-
     return <h1>Cargando...</h1>;
-
   }
 
   return (
 
     <div className="container mt-5">
 
-        <Link to="/"
+      <Link
+        to="/"
         className="btn btn-dark mb-4"
-       >
-
+      >
         ← Regresar
-
-       </Link>
+      </Link>
 
       <div className="row">
 
@@ -77,9 +73,7 @@ function ProductoDetalle() {
 
           <button
             className="btn btn-dark mt-4"
-            onClick={() =>
-              agregarAlCarrito(producto)
-            }
+            onClick={() => agregarAlCarrito(producto)}
           >
             Agregar al carrito
           </button>
