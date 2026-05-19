@@ -16,24 +16,50 @@ import {
 function ProductoDetalle() {
 
   const [producto, setProducto] = useState(null);
+  const [error, setError] = useState("");
 
   const { id } = useParams();
-
   const { agregarAlCarrito } = useContext(CarritoContext);
 
   useEffect(() => {
 
-    fetch(
-      `${import.meta.env.VITE_API_URL}/api/productos/${id}`
-    )
-      .then(res => res.json())
-      .then(data => setProducto(data))
-      .catch(error => console.log(error));
+    const obtenerProducto = async () => {
+      try {
+
+        const respuesta = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/productos/${id}`
+        );
+
+        if (!respuesta.ok) {
+          throw new Error("Producto no encontrado");
+        }
+
+        const data = await respuesta.json();
+        setProducto(data);
+
+      } catch (err) {
+        console.log(err);
+        setError("No se pudo cargar el producto");
+      }
+    };
+
+    obtenerProducto();
 
   }, [id]);
 
+  if (error) {
+    return (
+      <div className="container mt-5">
+        <h2>{error}</h2>
+        <Link to="/" className="btn btn-dark mt-3">
+          Volver
+        </Link>
+      </div>
+    );
+  }
+
   if (!producto) {
-    return <h1>Cargando...</h1>;
+    return <h1 className="text-center mt-5">Cargando...</h1>;
   }
 
   return (
