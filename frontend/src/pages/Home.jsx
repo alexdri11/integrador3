@@ -42,7 +42,7 @@ function Home() {
 
   useEffect(() => {
 
-    fetch("http://localhost:3000/api/productos")
+    fetch("https://integrador3-oddv.onrender.com/api/productos")
       .then(res => res.json())
       .then(data => setProductos(data));
 
