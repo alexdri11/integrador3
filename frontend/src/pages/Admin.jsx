@@ -3,6 +3,8 @@ import {
   useState
 } from "react";
 
+const API = "https://integrador3-oddv.onrender.com";
+
 function Admin() {
 
   const [productos, setProductos] = useState([]);
@@ -11,11 +13,11 @@ function Admin() {
     obtenerProductos();
   }, []);
 
-  // 🔥 GET PRODUCTOS
+
   const obtenerProductos = async () => {
     try {
       const respuesta = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/productos`
+        `${API}/api/productos`
       );
 
       const data = await respuesta.json();
@@ -26,11 +28,11 @@ function Admin() {
     }
   };
 
-  // 🔥 DELETE PRODUCTO
+  
   const eliminarProducto = async (id) => {
     try {
       await fetch(
-        `${import.meta.env.VITE_API_URL}/api/productos/${id}`,
+        `${API}/api/productos/${id}`,
         {
           method: "DELETE"
         }
@@ -43,7 +45,7 @@ function Admin() {
     }
   };
 
-  // 🔥 EDITAR PRODUCTO
+ 
   const editarProducto = async (producto) => {
 
     const nuevoNombre = prompt(
@@ -55,7 +57,7 @@ function Admin() {
 
     try {
       await fetch(
-        `${import.meta.env.VITE_API_URL}/api/productos/${producto._id}`,
+        `${API}/api/productos/${producto._id}`,
         {
           method: "PUT",
           headers: {
@@ -136,7 +138,6 @@ function Admin() {
     </div>
 
   );
-
 }
 
 export default Admin;
